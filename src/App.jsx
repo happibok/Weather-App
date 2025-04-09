@@ -11,8 +11,8 @@ function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentCity, setCurrentCity] = useState(null);
-  const [units, setUnits] = useState('metric'); // 'metric' or 'imperial'
+  const [currentCity, setCurrentCity] = useState(() => localStorage.getItem('weatherAppLastCity') || null);
+  const [units, setUnits] = useState(() => localStorage.getItem('weatherAppUnits') || 'metric');
 
   const fetchWeatherData = useCallback(async (city) => {
     setError(null);
@@ -52,7 +52,22 @@ function App() {
       setLoading(true);
       fetchWeatherData(currentCity);
     }
+    localStorage.setItem('weatherAppUnits', units);
   }, [units, currentCity, fetchWeatherData]);
+
+  useEffect(() => {
+    if (currentCity) {
+      localStorage.setItem('weatherAppLastCity', currentCity);
+    }
+  }, [currentCity]);
+
+  useEffect(() => {
+    if (currentCity && !weatherData && !loading && !error) {
+      console.log(`Fetching initial data for stored city: ${currentCity}`);
+      setLoading(true);
+      fetchWeatherData(currentCity);
+    }
+  }, [currentCity, weatherData, loading, error, fetchWeatherData]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
