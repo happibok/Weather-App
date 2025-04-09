@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
+import ErrorMessage from './components/ErrorMessage';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
@@ -36,7 +37,7 @@ function App() {
       <h1 className="text-4xl font-bold mb-8">Weather Dashboard</h1>
       <SearchBar onSearch={handleSearch} />
       {loading && <p className="mt-4">Loading...</p>}
-      {error && <p className="mt-4 text-red-500">Error: {error}</p>}
+      <ErrorMessage message={error} />
       {weatherData && !loading && !error && <WeatherCard weatherData={weatherData} />}
     </div>
   );
