@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import ErrorMessage from './components/ErrorMessage';
-import UnitToggle from './components/UnitToggle';
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
@@ -42,19 +41,6 @@ function App() {
     await fetchWeatherData(city);
   };
 
-  const handleUnitToggle = () => {
-    setUnits(prevUnits => prevUnits === 'metric' ? 'imperial' : 'metric');
-  };
-
-  useEffect(() => {
-    if (currentCity) {
-      console.log(`Units changed to ${units}, refetching for ${currentCity}`);
-      setLoading(true);
-      fetchWeatherData(currentCity);
-    }
-    localStorage.setItem('weatherAppUnits', units);
-  }, [units, currentCity, fetchWeatherData]);
-
   useEffect(() => {
     if (currentCity) {
       localStorage.setItem('weatherAppLastCity', currentCity);
@@ -69,24 +55,37 @@ function App() {
     }
   }, [currentCity, weatherData, loading, error, fetchWeatherData]);
 
+  useEffect(() => {
+    localStorage.setItem('weatherAppUnits', units);
+    if (currentCity && weatherData) {
+        console.log(`Units changed to ${units}, refetching for ${currentCity}`);
+        setLoading(true);
+        fetchWeatherData(currentCity);
+    }
+  }, [units]);
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl font-bold mb-8">Weather Dashboard</h1>
-      <UnitToggle units={units} onToggle={handleUnitToggle} />
-      <SearchBar onSearch={handleSearch} />
+    <div className="min-h-screen bg-gradient-to-b from-blue-950 via-blue-900 to-blue-800 p-4 pt-8 sm:p-8 text-gray-100 font-sans relative overflow-hidden bg-cloud">
+    
+      <div className="cloud-shape-1"></div>
+      <div className="cloud-shape-2"></div>
+      
 
-      <div className="w-full max-w-md mt-8 min-h-[320px] flex flex-col justify-center items-center">
-        {loading && !weatherData && (
-          <p className="text-lg text-gray-600">Loading...</p>
-        )}
-        {!loading && error && (
-          <ErrorMessage message={error} />
-        )}
-        {weatherData && (
-          <WeatherCard weatherData={weatherData} units={units} />
-        )}
+      <div className="relative z-10">
+        <SearchBar onSearch={handleSearch} />
+        
+        <div className="w-full mt-4 flex flex-col items-center">
+          {loading && !weatherData && (
+            <div className="mt-16 loader" role="status" aria-label="Loading..."></div>
+          )}
+          {!loading && error && (
+            <ErrorMessage message={error} />
+          )}
+          {weatherData && (
+            <WeatherCard weatherData={weatherData} units={units} />
+          )}
+        </div>
       </div>
-
     </div>
   );
 }
