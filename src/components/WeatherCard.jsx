@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiWind, FiDroplet, FiMapPin, FiArrowUp, FiArrowDown, FiSun } from 'react-icons/fi';
+import { FiWind, FiDroplet, FiMapPin, FiArrowUp, FiArrowDown, FiSun, FiRefreshCw } from 'react-icons/fi';
 
 const formatDateTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
@@ -9,7 +9,7 @@ const formatDateTime = (timestamp) => {
   return `Today, ${formattedDate} ${formattedTime}`;
 };
 
-function WeatherCard({ weatherData, units }) {
+function WeatherCard({ weatherData, units, refreshWeather, refreshing }) {
   if (!weatherData) return null;
 
   const { name, main, weather, wind, dt, sys } = weatherData;
@@ -26,16 +26,39 @@ function WeatherCard({ weatherData, units }) {
   const tempMax = Math.round(main.temp_max);
   const tempMin = Math.round(main.temp_min);
 
+  const handleRefresh = (e) => {
+    e.preventDefault();
+    if (!refreshing) {
+      refreshWeather();
+    }
+  };
+
   return (
     <div className="w-full max-w-xl mx-auto">
-
-
-      <div className="flex flex-col items-start mb-4">
-        <div className="flex items-center">
-          <FiMapPin className="text-white mr-2" size={24} />
-          <h2 className="text-3xl font-bold text-white">{name}, {sys.country}</h2>
+      <div className="flex justify-between items-start mb-4">
+        <div className="flex flex-col items-start">
+          <div className="flex items-center">
+            <FiMapPin className="text-white mr-2" size={24} />
+            <h2 className="text-3xl font-bold text-white">{name}, {sys.country}</h2>
+          </div>
+          <p className="text-gray-300 text-sm mt-1">{formatDateTime(dt)}</p>
         </div>
-        <p className="text-gray-300 text-sm mt-1">{formatDateTime(dt)}</p>
+        
+        <button 
+          onClick={handleRefresh}
+          className={`p-2 rounded-full transition-all duration-200 text-white 
+                     ${refreshing 
+                       ? 'bg-blue-500 bg-opacity-40 cursor-wait' 
+                       : 'bg-blue-500 bg-opacity-20 hover:bg-opacity-40 cursor-pointer'}`}
+          aria-label={refreshing ? "Refreshing weather data..." : "Refresh weather data"}
+          title={refreshing ? "Refreshing..." : "Refresh weather data"}
+          disabled={refreshing}
+        >
+          <FiRefreshCw 
+            size={20} 
+            className={refreshing ? 'animate-spin' : ''} 
+          />
+        </button>
       </div>
 
       <div className="text-right mb-4">

@@ -9,6 +9,7 @@ const API_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [currentCity, setCurrentCity] = useState(() => localStorage.getItem('weatherAppLastCity') || null);
   const [units, setUnits] = useState(() => localStorage.getItem('weatherAppUnits') || 'metric');
@@ -17,28 +18,42 @@ function App() {
     setError(null);
     try {
       const response = await fetch(`${API_BASE_URL}?q=${city}&appid=${API_KEY}&units=${units}`);
+      
+      const data = await response.json();
+      
       if (!response.ok) {
         if (response.status === 404) {
             throw new Error(`City "${city}" not found. Please check the spelling.`);
         }
-        throw new Error('Could not fetch weather data. Status: ' + response.status);
+     
+        throw new Error(JSON.stringify(data, null, 2));
       }
-      const data = await response.json();
+      
       setWeatherData(data);
       setError(null);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   }, [units]);
 
   const handleSearch = async (city) => {
     setLoading(true);
+    setRefreshing(false);
     setError(null);
     setWeatherData(null);
     setCurrentCity(city);
     await fetchWeatherData(city);
+  };
+
+  const refreshWeather = async () => {
+    if (!currentCity) return;
+    
+    console.log(`Refreshing weather for ${currentCity}...`);
+    setRefreshing(true);
+    await fetchWeatherData(currentCity);
   };
 
   useEffect(() => {
@@ -82,7 +97,12 @@ function App() {
             <ErrorMessage message={error} />
           )}
           {weatherData && (
-            <WeatherCard weatherData={weatherData} units={units} />
+            <WeatherCard 
+              weatherData={weatherData} 
+              units={units} 
+              refreshWeather={refreshWeather}
+              refreshing={refreshing} 
+            />
           )}
         </div>
       </div>
