@@ -3,3 +3,84 @@
 @tailwind utilities;
 
 @import "tailwindcss";
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #0a1329;
+}
+
+
+.loader {
+  border: 4px solid rgba(255, 255, 255, 0.3); 
+  border-left-color: #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.bg-cloud::before,
+.bg-cloud::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: -1;
+}
+
+.bg-cloud::before {
+  width: 80vh;
+  height: 80vh;
+  top: -20vh;
+  right: -20vh;
+}
+
+.bg-cloud::after {
+  width: 60vh;
+  height: 60vh;
+  bottom: -10vh;
+  left: -10vh;
+}
+
+.cloud-shape-1 {
+  position: absolute;
+  width: 50vh;
+  height: 50vh;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.08);
+  top: 30vh;
+  right: -10vh;
+  z-index: -1;
+}
+
+.cloud-shape-2 {
+  position: absolute;
+  width: 40vh;
+  height: 40vh;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.05);
+  bottom: 20vh;
+  left: 10vh;
+  z-index: -1;
+}
+
+.info-panel {
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1),
+              0 4px 8px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
