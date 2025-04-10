@@ -4,8 +4,8 @@ function ErrorMessage({ message }) {
   if (!message) return null;
 
   return (
-    <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg w-full max-w-md text-center" role="alert">
-      <p className="font-bold">Error</p>
+    <div className="mt-8 p-4 bg-red-800 bg-opacity-80 border border-red-900 text-red-100 rounded-lg w-full max-w-md text-center shadow-lg backdrop-blur-sm" role="alert">
+      <p className="font-semibold text-lg">Error</p>
       <p>{message}</p>
     </div>
   );
