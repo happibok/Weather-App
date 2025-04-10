@@ -28,10 +28,7 @@ function WeatherCard({ weatherData, units }) {
 
   return (
     <div className="w-full max-w-xl mx-auto">
-      <div className="text-center mb-4 opacity-50">
-        <p>Add Location</p>
-        <div className="text-2xl font-bold inline-block p-1.5 border border-gray-400 rounded-full">+</div>
-      </div>
+
 
       <div className="flex flex-col items-start mb-4">
         <div className="flex items-center">
